@@ -91,7 +91,7 @@ def chew_triangulation(points):
 
                 if edgeA in edges:
                     toRemove.union(all_perm(edges[edgeA]))
-                    toRemove.union(all_perm(triangle)) #Doe inrange hieronder!!
+                    toRemove.union(all_perm(triangle))
                     add = [tuple([a,b,p]) for a in edges[edgeA] for b in edges[edgeA] if a != b and a != p and b != p]
                     toAdd.extend(add)
                     add = [tuple([a,b,p]) for a in triangle for b in triangle if a != b and a != p and b != p]

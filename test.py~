@@ -8,7 +8,7 @@ from triangulation import add_triangle
 
 triangle = [[3,0], [3,3], [0,0]]
 
-triangles = chew_triangulation([tuple([0,0]), tuple([2,2]), tuple([2,4]), tuple([1,100]), tuple([0,4])])
+triangles = chew_triangulation([tuple([0,0]), tuple([2,2]), tuple([2,4]), tuple([0,4])])
 
 graph = nx.Graph()
 
