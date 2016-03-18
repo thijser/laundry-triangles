@@ -1,6 +1,8 @@
 import networkx as nx
 import random as rand
 import math
+import time
+import matplotlib.pyplot as plt
 
 def nodeString(point):
     return str(point[0]) + "," + str(point[1])
@@ -56,6 +58,18 @@ def in_circle(circle, point):
 def all_perm(triangle):
     return [tuple([a,b,c]) for a in triangle for b in triangle for c in triangle if a != b and a != c and b != c]
 
+def draw(triangles):
+    graph = nx.Graph()
+    pos = {}
+	
+    for triangle in triangles:
+      add_triangle(graph, pos, triangle)
+    nx.draw(graph, pos)
+    plt.show()
+    time.sleep(0.5)
+
+
+
 def find_shared_edges(triangles):
     shared_edges = set()
     sharing_triangles = set()
@@ -95,7 +109,7 @@ def chew_triangulation(points):
     r = points[r_i]
 
     de = chew_triangulation(points[0:p_i] + points[p_i+1:])
-        
+    draw(de)
     S = [triangle for triangle in de if in_circle(circumcircle(triangle), p)]
     S.append(tuple([p,q,r]))
 
@@ -107,8 +121,9 @@ def chew_triangulation(points):
     edges_to_remove = shared[0]
     triangles_to_remove = shared[1]
     
-    points = [point for triangle in triangles_to_remove for point in triangle]
-    triangles_to_add = [(points[a],points[b],p) for a in range(0,len(points)) for b in range(a+1,len(points)) if points[a] != points[b] and points[a] != p and points[b] != p and (points[a], points[b]) not in edges_to_remove]
+    edges = set()
+    edges.update([(triangle[a],triangle[b]) for triangle in triangles_to_remove for a in range(0,3) for b in range(a+1,3)])
+    triangles_to_add = [(a,b,p) for (a,b) in edges if a != p and b != p and (a, b) not in edges_to_remove]
       
     de.append((p,q,r))
     de = [triangle for triangle in de if triangle not in triangles_to_remove]
