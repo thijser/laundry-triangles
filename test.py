@@ -10,8 +10,8 @@ from polygons import create_circular_polygon
 
 triangle = [[3,0], [3,3], [0,0]]
 
-#triangles = chew_triangulation(create_circular_polygon(70,20))
-triangles = chew_triangulation([(-4,-2),(-3,-2),(2,2),(5,2),(-2,-2)])
+triangles = chew_triangulation(create_circular_polygon(70,20))
+#triangles = chew_triangulation([(-4,-2),(-3,-2),(2,2),(5,2),(-2,-3)])
 graph = nx.Graph()
 pos = {}
 
