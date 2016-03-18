@@ -2,15 +2,13 @@ import networkx as nx
 import random as rand
 import math
 
-from sets import Set
-
 def nodeString(point):
     return str(point[0]) + "," + str(point[1])
 
-def add_triangle(graph, points):
-    graph.add_node(nodeString(points[0]))
-    graph.add_node(nodeString(points[1]))
-    graph.add_node(nodeString(points[2]))
+def add_triangle(graph, pos, points):
+    for i in range(0,3):
+        graph.add_node(nodeString(points[i]))
+        pos[nodeString(points[i])] = points[i]  
 
     for i in range(0,3):
         for j in range(i+1,3):
@@ -74,36 +72,37 @@ def chew_triangulation(points):
     r = points[r_i]
 
     de = chew_triangulation(points[0:p_i] + points[p_i+1:])
-    de.append(tuple([p,q,r]))
-    
+        
     S = [triangle for triangle in de if in_circle(circumcircle(triangle), p)]
     S.append(tuple([p,q,r]))
 
-    toRemove = Set([])
+    toRemove = set([])
     toAdd = []
 
     edges = {}
     for triangle in S: 
         for i in range(0,3):
             for j in range(i+1,3):
-                edgeA = tuple([triangle[i], triangle[j]])
-                edgeB = tuple([triangle[j], triangle[i]])
+                edgeA = (triangle[i], triangle[j])
+                edgeB = (triangle[j], triangle[i])
 
                 if edgeA in edges:
-                    toRemove.union(all_perm(edges[edgeA]))
-                    toRemove.union(all_perm(triangle)) #Doe inrange hieronder!!
-                    add = [tuple([a,b,p]) for a in edges[edgeA] for b in edges[edgeA] if a != b and a != p and b != p]
+                    triangle_b = edges[edgeA]
+                
+                    toRemove.update(all_perm(triangle))
+                    toRemove.update(all_perm(triangle_b))
+                    
+                    add = [tuple([triangle[a],triangle[b],p]) for a in range(0,3) for b in range(a+1,3) if triangle[a] != p and triangle[b] != p]
                     toAdd.extend(add)
-                    add = [tuple([a,b,p]) for a in triangle for b in triangle if a != b and a != p and b != p]
+                    add = [tuple([triangle_b[a],triangle_b[b],p]) for a in range(0,3) for b in range(a+1,3) if triangle_b[a] != p and triangle_b[b] != p]
                     toAdd.extend(add)
                 
                 else:
                     edges[edgeA] = triangle
                     edges[edgeB] = triangle
+      
+    de.append((p,q,r))
+    de.extend(toAdd)
 
-    toAdd.extend([triangle for triangle in de if triangle not in toRemove])
-
-    print toRemove
-
-    return toAdd
+    return [triangle for triangle in de if triangle not in toRemove]
 

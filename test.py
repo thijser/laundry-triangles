@@ -6,15 +6,18 @@ from triangulation import chew_triangulation
 from triangulation import circumcircle
 from triangulation import add_triangle
 
+from polygons import create_circular_polygon
+
 triangle = [[3,0], [3,3], [0,0]]
 
-triangles = chew_triangulation([tuple([0,0]), tuple([2,2]), tuple([2,4]), tuple([1,100]), tuple([0,4])])
+triangles = chew_triangulation(create_circular_polygon(5,10))
 
 graph = nx.Graph()
+pos = {}
 
 for triangle in triangles:
-    add_triangle(graph, triangle)
+    add_triangle(graph, pos, triangle)
 
-nx.draw(graph)
+nx.draw(graph, pos)
 
 plt.show()
