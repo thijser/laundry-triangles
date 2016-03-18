@@ -56,6 +56,29 @@ def in_circle(circle, point):
 def all_perm(triangle):
     return [tuple([a,b,c]) for a in triangle for b in triangle for c in triangle if a != b and a != c and b != c]
 
+def find_shared_edges(triangles):
+    shared_edges = set()
+    sharing_triangles = set()
+    
+    edges = {}
+    for triangle in triangles: 
+        for i in range(0,3):
+            for j in range(i+1,3):
+                edgeA = (triangle[i], triangle[j])
+                edgeB = (triangle[j], triangle[i])
+
+                if edgeA in edges:
+                    shared_edges.add(edgeA)
+                    shared_edges.add(edgeB)
+                    sharing_triangles.add(triangle)
+                    sharing_triangles.add(edges[edgeA])
+                
+                else:
+                    edges[edgeA] = triangle
+                    edges[edgeB] = triangle
+                    
+    return [shared_edges, sharing_triangles]
+    
 def chew_triangulation(points):
     if len(points) < 3:
         raise ValueError("Not enough points")    
@@ -76,33 +99,20 @@ def chew_triangulation(points):
     S = [triangle for triangle in de if in_circle(circumcircle(triangle), p)]
     S.append(tuple([p,q,r]))
 
-    toRemove = set([])
-    toAdd = []
+    triangles_to_remove = set()
+    triangles_to_add = []
 
-    edges = {}
-    for triangle in S: 
-        for i in range(0,3):
-            for j in range(i+1,3):
-                edgeA = (triangle[i], triangle[j])
-                edgeB = (triangle[j], triangle[i])
-
-                if edgeA in edges:
-                    triangle_b = edges[edgeA]
-                
-                    toRemove.update(all_perm(triangle))
-                    toRemove.update(all_perm(triangle_b))
-                    
-                    add = [tuple([triangle[a],triangle[b],p]) for a in range(0,3) for b in range(a+1,3) if triangle[a] != p and triangle[b] != p]
-                    toAdd.extend(add)
-                    add = [tuple([triangle_b[a],triangle_b[b],p]) for a in range(0,3) for b in range(a+1,3) if triangle_b[a] != p and triangle_b[b] != p]
-                    toAdd.extend(add)
-                
-                else:
-                    edges[edgeA] = triangle
-                    edges[edgeB] = triangle
+    shared = find_shared_edges(S)
+    
+    edges_to_remove = shared[0]
+    triangles_to_remove = shared[1]
+    
+    points = [point for triangle in triangles_to_remove for point in triangle]
+    triangles_to_add = [(points[a],points[b],p) for a in range(0,len(points)) for b in range(a+1,len(points)) if points[a] != points[b] and points[a] != p and points[b] != p and (points[a], points[b]) not in edges_to_remove]
       
     de.append((p,q,r))
-    de.extend(toAdd)
+    de = [triangle for triangle in de if triangle not in triangles_to_remove]
+    de.extend(triangles_to_add)
 
-    return [triangle for triangle in de if triangle not in toRemove]
+    return de
 
