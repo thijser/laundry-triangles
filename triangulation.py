@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 def nodeString(point):
     return str(point[0]) + "," + str(point[1])
 
-def add_triangle(graph, pos, points):
+def add_triangle(graph, pos, points, edge_color = 'b', node_color = {}):
     for i in range(0,3):
-        graph.add_node(nodeString(points[i]))
+        graph.add_node(nodeString(points[i]), color = node_color.setdefault(points[i], 'b'))
         pos[nodeString(points[i])] = points[i]  
 
     for i in range(0,3):
         for j in range(i+1,3):
-            graph.add_edge(nodeString(points[i]),nodeString(points[j]))
+            graph.add_edge(nodeString(points[i]),nodeString(points[j]), color = edge_color)
 
 def dot_product(x,y):
     ret = x[0]*y[0] + x[1]*y[1]
@@ -58,17 +58,30 @@ def in_circle(circle, point):
 def all_perm(triangle):
     return [tuple([a,b,c]) for a in triangle for b in triangle for c in triangle if a != b and a != c and b != c]
 
-def draw(triangles):
+def draw(triangles, S = [], p = None, pqr = []):
     graph = nx.Graph()
     pos = {}
 	
     for triangle in triangles:
-      add_triangle(graph, pos, triangle)
-    nx.draw(graph, pos)
+        add_triangle(graph, pos, triangle, 'b')
+            
+    for triangle in S:
+        add_triangle(graph, pos, triangle, 'r')
+            
+    if p != None:
+        colors = {}
+        for point in pqr:
+            colors[point] = 'g'
+        colors[p] = 'k'
+        
+        add_triangle(graph, pos, pqr, 'r', colors)
+            
+    #http://stackoverflow.com/questions/3950897/networkx-how-to-draw-coloured-edges
+    edges,edge_colors = zip(*nx.get_edge_attributes(graph,'color').items())
+    nodes,node_colors = zip(*nx.get_node_attributes(graph,'color').items())
+    
+    nx.draw_networkx(graph, pos, nodelist = nodes, edgelist=edges, node_color = node_colors, edge_color = edge_colors, with_labels = False)
     plt.show()
-    time.sleep(0.5)
-
-
 
 def find_shared_edges(triangles):
     shared_edges = set()
@@ -109,10 +122,11 @@ def chew_triangulation(points):
     r = points[r_i]
 
     de = chew_triangulation(points[0:p_i] + points[p_i+1:])
-    
-    draw(de)
-    
+        
     S = [triangle for triangle in de if in_circle(circumcircle(triangle), p)]
+        
+    draw(de, S, p, (p,q,r))
+    
     S.append(tuple([p,q,r]))
 
     triangles_to_remove = set()
@@ -130,6 +144,8 @@ def chew_triangulation(points):
     de.append((p,q,r))
     de = [triangle for triangle in de if triangle not in triangles_to_remove]
     de.extend(triangles_to_add)
+    
+    draw(de)
 
     return de
 

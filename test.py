@@ -1,10 +1,10 @@
 import networkx as nx
-import numpy as np
 import matplotlib.pyplot as plt
 
 from triangulation import chew_triangulation
 from triangulation import circumcircle
 from triangulation import add_triangle
+from triangulation import draw
 
 from polygons import create_circular_polygon
 
@@ -14,12 +14,4 @@ triangles = chew_triangulation(create_circular_polygon(35,10))
 #triangle = ((0.0,0.0), (0.1,0.1), (0.0,15.0))
 #print(circumcircle(triangle))
 
-graph = nx.Graph()
-pos = {}
-
-for triangle in triangles:
-    add_triangle(graph, pos, triangle)
-
-nx.draw(graph, pos)
-
-plt.show()
+draw(triangles)
