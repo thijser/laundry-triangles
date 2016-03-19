@@ -41,7 +41,7 @@ def circumcircle(triangle):
 
     con = num/denom
 
-    origin =  [con * h2[1][0] + h2[0][0], con * h2[1][0] + h2[0][0]]
+    origin =  [con * h2[1][0] + h2[0][0], con * h2[1][1] + h2[0][1]]
 
     radius = dist(origin, c)
 
@@ -109,7 +109,9 @@ def chew_triangulation(points):
     r = points[r_i]
 
     de = chew_triangulation(points[0:p_i] + points[p_i+1:])
+    
     draw(de)
+    
     S = [triangle for triangle in de if in_circle(circumcircle(triangle), p)]
     S.append(tuple([p,q,r]))
 

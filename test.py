@@ -8,10 +8,12 @@ from triangulation import add_triangle
 
 from polygons import create_circular_polygon
 
-triangle = [[3,0], [3,3], [0,0]]
-
-triangles = chew_triangulation(create_circular_polygon(70,20))
+triangles = chew_triangulation(create_circular_polygon(35,10))
 #triangles = chew_triangulation([(-4,-2),(-3,-2),(2,2),(5,2),(-2,-3)])
+
+#triangle = ((0.0,0.0), (0.1,0.1), (0.0,15.0))
+#print(circumcircle(triangle))
+
 graph = nx.Graph()
 pos = {}
 
