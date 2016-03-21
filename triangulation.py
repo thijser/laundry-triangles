@@ -4,13 +4,15 @@ import math
 import time
 import matplotlib.pyplot as plt
 
+from decimal import *
+
 def nodeString(point):
     return str(point[0]) + "," + str(point[1])
 
 def add_triangle(graph, pos, points, edge_color = 'b', node_color = {}):
     for i in range(0,3):
         graph.add_node(nodeString(points[i]), color = node_color.setdefault(points[i], 'b'))
-        pos[nodeString(points[i])] = points[i]  
+        pos[nodeString(points[i])] = [float(points[i][0]), float(points[i][1])]  
 
     for i in range(0,3):
         for j in range(i+1,3):
@@ -21,7 +23,7 @@ def dot_product(x,y):
     return ret
 
 def perpendicular(a,b):
-    origin = [(a[0] + b[0])/2.0, (a[1] + b[1])/2.0]
+    origin = [(a[0] + b[0])/Decimal('2'), (a[1] + b[1])/Decimal('2')]
     vec = [a[1] - b[1], b[0] - a[0]]
     return [origin, vec]
 
@@ -48,9 +50,9 @@ def circumcircle(triangle):
     return [origin, radius]
 
 def dist(a,b):
-    x = math.pow(a[0] - b[0], 2)
-    y = math.pow(a[1] - b[1], 2)
-    return math.sqrt(x + y)
+    x = a[0] - b[0]
+    y = a[1] - b[1]
+    return (x*x + y*y).sqrt()
 
 def in_circle(circle, point):
     return dist(circle[0], point) <= circle[1]
