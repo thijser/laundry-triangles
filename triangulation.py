@@ -123,11 +123,12 @@ def chew_triangulation(points):
     q = points[q_i]
     r = points[r_i]
 
-    de = chew_triangulation(points[0:p_i] + points[p_i+1:])
+    points.pop(p_i)
+    de = chew_triangulation(points)
         
     S = [triangle for triangle in de if in_circle(circumcircle(triangle), p)]
         
-    draw(de, S, p, (p,q,r))
+    #draw(de, S, p, (p,q,r))
     
     S.append(tuple([p,q,r]))
 
@@ -147,7 +148,7 @@ def chew_triangulation(points):
     de = [triangle for triangle in de if triangle not in triangles_to_remove]
     de.extend(triangles_to_add)
     
-    draw(de)
+    #draw(de)
 
     return de
 

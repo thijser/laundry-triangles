@@ -3,7 +3,6 @@ import math
 
 from decimal import *
 
-rand.seed(42)
 def create_circular_polygon(radius, num_points):
     func = lambda p : (Decimal(math.cos(p*2*math.pi)*radius), Decimal(math.sin(p*2*math.pi)*radius))
        
