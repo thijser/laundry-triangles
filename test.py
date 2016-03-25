@@ -18,6 +18,7 @@ multiplier = 20
 n = 20
 repetitions = 10
 
+
 sys.setrecursionlimit((n+5) * multiplier)
 
 draw(chew_triangulation(create_ellipsular_polygon(20,23,60)))
@@ -26,6 +27,7 @@ quit()
 
 for i in range(1,n):
     size = i*multiplier
+
     
     temp_times = []
     
