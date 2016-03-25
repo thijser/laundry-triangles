@@ -25,26 +25,30 @@ def merge(left,right):
     j=0
     a=left[0]
     b=right[0]
-    c=left[0]
+    c=left[0] #candidate 
 
     while((i<len(left)-1)&(j<len(right)-1)):
         circle=tr.circumcircle([[a.x,a.y],[b.x,b.y],[left[i+1].x,left[i+1].x]])
         if (tr.in_circle(circle,[right[i+j].x,right[i+1].y])):
             c=left[j+1]
-            c.edges.add(b)
-            c.edges.add(a)
-            b.edges.add(c)
-            a.edges.add(c)
-            a=c
             j=j+1
+            circle2=tr.circumcircle([[a.x,a.y],[b.x,b.y],[c.y,c.x]])
+            
+            if ((len(left)>j+1) and tr.in_circle(circle2,[left[j+1].x,left[j+1].y]) or ((len(right)>i+1) and tr.in_circle(circle2,[right[i+1].x,right[i+1].y]))):
+                     continue
         else:
-            c=right[i+1]
-            c.edges.add(b)
-            c.edges.add(a)
-            b.edges.add(c)
-            a.edges.add(c)
-            a=c
+            c=right[i+1]  
+            circle2=tr.circumcircle([[a.x,a.y],[b.x,b.y],[c.y,c.x]])
             i=i+1
+            if ((len(left)>j+1) and tr.in_circle(circle2,[left[j+1].x,left[j+1].y]) or ((len(right)>i+1) and tr.in_circle(circle2,[right[i+1].x,right[i+1].y]))):
+                continue
+
+        c.edges.add(b)
+        c.edges.add(a)
+        b.edges.add(c)
+        a.edges.add(c)
+        a=c
+        j=j+1
             
     left[len(left)-1].edges.add(right[len(right)-1])
     right[len(right)-1].edges.add(left[len(left)-1])
