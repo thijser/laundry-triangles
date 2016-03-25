@@ -8,15 +8,15 @@ from polygons import create_circular_polygon
 from det1 import dinvandconquer
 
 pos={}
-polygon=create_circular_polygon(20,10)
+polygon=create_circular_polygon(20,30)
 g = dinvandconquer(polygon)
 graph= nx.Graph()
-for nod in g.nodes:
-   graph.add_node(nod.x+","+nod.y)
-   pos[nod.x+","+nod.y]=[nod.x,nod.y]
-for node in g.nodes:
+for nod in g:
+   graph.add_node('{0:f}'.format(nod.x)+","+'{0:f}'.format(nod.y))
+   pos['{0:f}'.format(nod.x)+","+'{0:f}'.format(nod.y)]=['{0:f}'.format(nod.x),'{0:f}'.format(nod.y)]
+for node in g:
     for edge in node.edges:
-        graph.add_edge((nod.x+","+nod.y),(edge.x+","+edge.y))
+        graph.add_edge(('{0:f}'.format(nod.x)+","+'{0:f}'.format(nod.y)),('{0:f}'.format(edge.x)+","+'{0:f}'.format(edge.y)))
 nx.draw(graph,pos)
 
 
