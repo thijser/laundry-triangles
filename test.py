@@ -2,8 +2,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import sys
 
-from triangulation2 import chew_triangulation
-from triangulation2 import draw
+from triangulation import chew_triangulation
+from triangulation import draw
 
 from polygons import create_circular_polygon
 from polygons import create_random_structure
