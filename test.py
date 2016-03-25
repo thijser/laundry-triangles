@@ -1,36 +1,40 @@
 import networkx as nx
-import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
-from triangulation import chew_triangulation
-from triangulation import circumcircle
-from triangulation import add_triangle
-from det1 import dinvandconquer
+from triangulation2 import chew_triangulation
+from triangulation2 import draw
 
 from polygons import create_circular_polygon
 
-triangle = [[3,0], [3,3], [0,0]]
-chew_triangulation
-polygon=create_circular_polygon(70,20)
+import time
 
-triangles = chew_triangulation(polygon)
-graph = nx.Graph()
-pos = {}
 
-for triangle in triangles:
-    add_triangle(graph, pos, triangle)
+sizes = []
+times = []
+multiplier = 20
+n = 99
 
-nx.draw(graph, pos)
+sys.setrecursionlimit((n+5) * multiplier)
 
-plt.show()
+for i in range(1,n):
+    size = i*multiplier
+    pol = create_circular_polygon(20,size) #For testing multiple algs we should first copy this
+    start_time = time.clock()
+    chew_triangulation(pol)
+    end_time = time.clock()    
+    times.append(end_time - start_time)
+    sizes.append(size)
+    print(times[i-1])
 
-pos={}
-g = dinvandconquer(polygon)
-graph= nx.Graph()
-for nod in g.nodes
-   graph.add_node(nod.x+","+nod.y)
-   pos[nod.x+","+nod.y]=[nod.x,nod.y]
-for node in g.nodes
-    for edge in node.edges
-        graph.add_edge((nod.x+","+nod.y),(edge.x+","+edge.y))
-nx.draw(graph,pos)
+plt.plot(sizes,times)
+plt.show()    
+
+draw(chew_triangulation(create_circular_polygon(20,5)))
+triangles = chew_triangulation([(-4,-2),(-3,-2),(2,2),(5,2),(-2,-3)])
+
+triangle = ((0.0,0.0), (0.1,0.1), (0.0,15.0))
+print(circumcircle(triangle))
+
+draw(triangles)
+

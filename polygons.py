@@ -1,9 +1,10 @@
 import random as rand
 import math
 
-rand.seed(42)
+from decimal import *
+
 def create_circular_polygon(radius, num_points):
-    func = lambda p : (math.cos(p*2*math.pi)*radius, math.sin(p*2*math.pi)*radius)
+    func = lambda p : (Decimal(math.cos(p*2*math.pi)*radius), Decimal(math.sin(p*2*math.pi)*radius))
        
     return create_polygon(func, num_points)
  
