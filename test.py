@@ -6,6 +6,8 @@ from triangulation2 import chew_triangulation
 from triangulation2 import draw
 
 from polygons import create_circular_polygon
+from polygons import create_random_structure
+from polygons import create_ellipsular_polygon
 
 import time
 
@@ -17,6 +19,10 @@ n = 20
 repetitions = 10
 
 sys.setrecursionlimit((n+5) * multiplier)
+
+draw(chew_triangulation(create_ellipsular_polygon(20,23,60)))
+
+quit()
 
 for i in range(1,n):
     size = i*multiplier
@@ -35,6 +41,4 @@ for i in range(1,n):
     print(times[i-1])
 
 plt.plot(sizes,times)
-plt.show()    
-
-draw(chew_triangulation(create_circular_polygon(20,35)))
+plt.show()
