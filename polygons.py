@@ -22,8 +22,20 @@ def create_random_structure(num_points):
     return [(Decimal(rand.random()*50), Decimal(rand.random()*50)) for i in range(0,num_points)]
     
 def create_worst_case(radius, num_points):
-    step_size = (1.0/100)/num_points
-    points = [(Decimal(radius*math.cos(p*step_size*2*math.pi)), Decimal(radius*math.sin(p*step_size*2*math.pi))) for p in range(0,num_points)]
-    points.insert(0, (Decimal(radius*math.cos(math.pi)), Decimal(radius*math.sin(math.pi))))
-    return points
+    func = lambda p : (Decimal(radius*math.cos(p*2*math.pi)), Decimal(radius*math.sin(p*2*math.pi)))
+    step_size = (1.0/20)/(num_points/3.0)
+    
+    points = set()
+    pos = 0.0;
+    
+    while len(points) < num_points:
+        for i in range(1, rand.randint(0,int(num_points/1.5))):
+            pos += step_size
+            points.add(pos)
+        pos += rand.random() / 4.0
+        
+    points = list(points)
+    points.sort()
+
+    return [func(p) for p in points]
     

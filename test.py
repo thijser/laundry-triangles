@@ -18,22 +18,19 @@ sizes = []
 timesW = []
 timesA = []
 multiplier = 20
-n = 21
+n = 51
 repetitions = 10
 
 
 sys.setrecursionlimit((n+5) * multiplier)
 
-#draw(chew_triangulation(create_ellipsular_polygon(20,23,60)))
-
-difference = []
-sys.setrecursionlimit((800+5) * multiplier)
-for i in range(1,n):
-    poly = create_worst_case(20, 800)
-    temp_timesW = []
-    temp_timesA = []
+while True:
+    poly = create_worst_case(20,50)
     
-    for j in range(1, repetitions):
+    temp_timesW = []
+    temp_timesA = []   
+    
+    for j in range(0,repetitions):
         pol = list(poly)
         start_time = time.clock()
         deterministic_triangulation(pol)
@@ -45,18 +42,15 @@ for i in range(1,n):
         chew_triangulation(pol)
         end_time = time.clock()
         temp_timesA.append(end_time - start_time)
+        
+    difference = sum(temp_timesW) - sum(temp_timesA)
+    print(difference)
+    draw(chew_triangulation(poly))
+    #if difference >= 0.01:
+        #draw(chew_triangulation(poly))
+        #quit()
 
-    timesW.append(sum(temp_timesA) / (float(repetitions)))
-    timesA.append(sum(temp_timesA) / (float(repetitions)))
-    difference.append(timesW[i-1] - timesA[i-1])
-    sizes.append(i)
-    
-#plt.plot(sizes,timesW, 'r')
-#plt.plot(sizes,timesA, 'b')
-plt.plot(sizes,difference)
-plt.show()
-    
-quit()
+#draw(chew_triangulation(create_ellipsular_polygon(20,23,60)))
 
 for i in range(1,n):
     size = i*multiplier
@@ -71,9 +65,9 @@ for i in range(1,n):
         end_time = time.clock()
         temp_timesW.append(end_time - start_time)
         
-        pol = create_circular_polygon(20, size)
+        pol = create_worst_case(20, size)
         start_time = time.clock()
-        deterministic_triangulation(pol)
+        chew_triangulation(pol)
         end_time = time.clock()
         temp_timesA.append(end_time - start_time)
     
