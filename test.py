@@ -13,7 +13,7 @@ import time
 sizes = []
 times = []
 multiplier = 20
-n = 99
+n = 300
 
 sys.setrecursionlimit((n+5) * multiplier)
 
@@ -21,7 +21,7 @@ for i in range(1,n):
     size = i*multiplier
     pol = create_circular_polygon(20,size) #For testing multiple algs we should first copy this
     start_time = time.clock()
-    chew_triangulation(pol)
+    draw(chew_triangulation(pol))
     end_time = time.clock()    
     times.append(end_time - start_time)
     sizes.append(size)
