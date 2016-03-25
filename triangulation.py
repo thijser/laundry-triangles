@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 
 from decimal import *
 
-def add_triangle(graph, points):
+def add_triangle(graph, triangle):
     for i in range(0,3):
-        graph.add_node(points[i])
+        graph.add_node(triangle[i])
 
     for i in range(0,3):
         for j in range(i+1,3):
-            graph.add_edge(points[i],points[j])
+            graph.add_edge(triangle[i], triangle[j])
 
 def dot_product(x,y):
     ret = x[0]*y[0] + x[1]*y[1]
