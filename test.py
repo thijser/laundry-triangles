@@ -26,9 +26,10 @@ sys.setrecursionlimit((n+5) * multiplier)
 
 #draw(chew_triangulation(create_ellipsular_polygon(20,23,60)))
 
+difference = []
 sys.setrecursionlimit((800+5) * multiplier)
 for i in range(1,n):
-    poly = create_circular_polygon(20, 800)
+    poly = create_worst_case(20, 800)
     temp_timesW = []
     temp_timesA = []
     
@@ -47,10 +48,12 @@ for i in range(1,n):
 
     timesW.append(sum(temp_timesA) / (float(repetitions)))
     timesA.append(sum(temp_timesA) / (float(repetitions)))
+    difference.append(timesW[i-1] - timesA[i-1])
     sizes.append(i)
     
-plt.plot(sizes,timesW, 'r')
-plt.plot(sizes,timesA, 'b')
+#plt.plot(sizes,timesW, 'r')
+#plt.plot(sizes,timesA, 'b')
+plt.plot(sizes,difference)
 plt.show()
     
 quit()
