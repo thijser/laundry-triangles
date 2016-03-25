@@ -114,8 +114,8 @@ def update_graph(graph, S, p):
             if point != p:
                 graph.add_edge(point, p)
                 
-#Uses Chew's algorithm to find the Delaunay triangulation of points
-#points will get modified in the process
+#Uses Chew's algorithm to find the Delaunay triangulation of points.
+#Points will get modified in the process
 def chew_triangulation(points):
     if len(points) < 3:
         raise ValueError("Not enough points")    
@@ -128,6 +128,36 @@ def chew_triangulation(points):
     p_i = rand.randint(0,len(points)-1)
     q_i = (p_i - 1) % len(points);
     r_i = (p_i + 1) % len(points);
+
+    p = points[p_i]
+    q = points[q_i]
+    r = points[r_i]
+
+    points.pop(p_i)
+    G = chew_triangulation(points)
+    
+    S = find_S(G, p, q, r)
+    
+    add_triangle(G, (p,q,r))
+    
+    update_graph(G, S, p)
+    
+    return G
+    
+#Uses the derandomized version of Chew's algorithm to find the Delaunay triangulation of points.
+#Points will get modified in the process
+def deterministic_triangulation(points):
+    if len(points) < 3:
+        raise ValueError("Not enough points")    
+
+    if len(points) == 3:
+        G = nx.Graph()
+        add_triangle(G, points)
+        return G
+         
+    p_i = 1
+    q_i = 0;
+    r_i = 2;
 
     p = points[p_i]
     q = points[q_i]
