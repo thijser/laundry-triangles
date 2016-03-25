@@ -27,7 +27,6 @@ quit()
 
 for i in range(1,n):
     size = i*multiplier
-
     
     temp_times = []
     

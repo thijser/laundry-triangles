@@ -1,22 +1,17 @@
 import networkx as nx
 import random as rand
 import math
-import time
 import matplotlib.pyplot as plt
 
 from decimal import *
 
-def nodeString(point):
-    return str(point[0]) + "," + str(point[1])
-
-def add_triangle(graph, pos, points, edge_color = 'b', node_color = {}):
+def add_triangle(graph, points):
     for i in range(0,3):
-        graph.add_node(nodeString(points[i]), color = node_color.setdefault(points[i], 'b'))
-        pos[nodeString(points[i])] = [float(points[i][0]), float(points[i][1])]  
+        graph.add_node(points[i])
 
     for i in range(0,3):
         for j in range(i+1,3):
-            graph.add_edge(nodeString(points[i]),nodeString(points[j]), color = edge_color)
+            graph.add_edge(points[i],points[j])
 
 def dot_product(x,y):
     ret = x[0]*y[0] + x[1]*y[1]
@@ -57,63 +52,68 @@ def dist(a,b):
 def in_circle(circle, point):
     return dist(circle[0], point) <= circle[1]
 
-def all_perm(triangle):
-    return [tuple([a,b,c]) for a in triangle for b in triangle for c in triangle if a != b and a != c and b != c]
-
-def draw(triangles, S = [], p = None, pqr = []):
-    graph = nx.Graph()
+def draw(graph):
     pos = {}
-	
-    for triangle in triangles:
-        add_triangle(graph, pos, triangle, 'b')
-            
-    for triangle in S:
-        add_triangle(graph, pos, triangle, 'r')
-            
-    if p != None:
-        colors = {}
-        for point in pqr:
-            colors[point] = 'g'
-        colors[p] = 'k'
-        
-        add_triangle(graph, pos, pqr, 'r', colors)
-            
-    #http://stackoverflow.com/questions/3950897/networkx-how-to-draw-coloured-edges
-    edges,edge_colors = zip(*nx.get_edge_attributes(graph,'color').items())
-    nodes,node_colors = zip(*nx.get_node_attributes(graph,'color').items())
     
-    nx.draw_networkx(graph, pos, nodelist = nodes, edgelist=edges, node_color = node_colors, edge_color = edge_colors, with_labels = False)
+    for node in graph:
+        pos[node] = [float(node[0]), float(node[1])]
+    
+    nx.draw_networkx(graph, pos, with_labels = False)
     plt.show()
 
-def find_shared_edges(triangles):
-    shared_edges = set()
-    sharing_triangles = set()
+def find_S(graph, p, q, r):
+    to_check = set()
+    to_check.add(q)
+    to_check.add(r)
     
-    edges = {}
-    for triangle in triangles: 
+    checked = set()
+    
+    S = []
+    
+    while to_check:
+        point = to_check.pop()
+        checked.add(point)
+        
+        neighbors = [n for n in graph[point] if n not in checked]        
+        triangles = [(point, neighbors[n1], neighbors[n2]) for n1 in range(0,len(neighbors)) for n2 in range(n1+1,len(neighbors)) if graph.has_edge(neighbors[n1], neighbors[n2])]        
+        invalid = [triangle for triangle in triangles if in_circle(circumcircle(triangle), p)]
+        
+        S.extend(invalid)
+        
+        to_check.update([triangle[i] for triangle in invalid for i in range(1,3)])
+        
+    S.append((p,q,r))
+    
+    return S
+
+def update_graph(graph, S, p):
+    edges = set()
+    
+    for triangle in S:
         for i in range(0,3):
             for j in range(i+1,3):
                 edgeA = (triangle[i], triangle[j])
-                edgeB = (triangle[j], triangle[i])
-
-                if edgeA in edges:
-                    shared_edges.add(edgeA)
-                    shared_edges.add(edgeB)
-                    sharing_triangles.add(triangle)
-                    sharing_triangles.add(edges[edgeA])
                 
+                if edgeA in edges:
+                    graph.remove_edge(triangle[i], triangle[j])
                 else:
-                    edges[edgeA] = triangle
-                    edges[edgeB] = triangle
+                    edgeB = (triangle[j], triangle[i])
+                    edges.add(edgeA)
+                    edges.add(edgeB)
                     
-    return [shared_edges, sharing_triangles]
+    for triangle in S:
+        for point in triangle:
+            if point != p:
+                graph.add_edge(point, p)
     
 def chew_triangulation(points):
     if len(points) < 3:
         raise ValueError("Not enough points")    
 
     if len(points) == 3:
-        return [tuple(points)]
+        G = nx.Graph()
+        add_triangle(G, points)
+        return G
          
     p_i = rand.randint(0,len(points)-1)
     q_i = (p_i - 1) % len(points);
@@ -124,31 +124,15 @@ def chew_triangulation(points):
     r = points[r_i]
 
     points.pop(p_i)
-    de = chew_triangulation(points)
+    G = chew_triangulation(points)
+    
+    S = find_S(G, p, q, r)
+    
+    add_triangle(G, (p,q,r))
+    
+    update_graph(G, S, p)
+    
+    return G
         
-    S = [triangle for triangle in de if in_circle(circumcircle(triangle), p)]
-        
-    #draw(de, S, p, (p,q,r))
     
-    S.append(tuple([p,q,r]))
-
-    triangles_to_remove = set()
-    triangles_to_add = []
-
-    shared = find_shared_edges(S)
-    
-    edges_to_remove = shared[0]
-    triangles_to_remove = shared[1]
-    
-    edges = set()
-    edges.update([(triangle[a],triangle[b]) for triangle in triangles_to_remove for a in range(0,3) for b in range(a+1,3)])
-    triangles_to_add = [(a,b,p) for (a,b) in edges if a != p and b != p and (a, b) not in edges_to_remove]
-      
-    de.append((p,q,r))
-    de = [triangle for triangle in de if triangle not in triangles_to_remove]
-    de.extend(triangles_to_add)
-    
-    #draw(de)
-
-    return de
 
