@@ -8,7 +8,7 @@ from polygons import create_circular_polygon
 from det1 import dinvandconquer
 
 pos={}
-polygon=create_circular_polygon(20,30)
+polygon=create_circular_polygon(20,4)
 g = dinvandconquer(polygon)
 graph= nx.Graph()
 
