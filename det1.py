@@ -46,17 +46,17 @@ def mergeLists(left,right):
 
 def divid(sortedPoints):
     
-    if(len(sortedPoints<3)):
-        a = GraphNode(sortedpoints[0][0],sortedpoints[0][1])
-        b = GraphNode(sortedpoints[1][0],sortedpoints[1][1])
+    if(len(sortedPoints)<3):
+        a = GraphNode(sortedPoints[0][0],sortedPoints[0][1])
+        b = GraphNode(sortedPoints[1][0],sortedPoints[1][1])
         a.edges[0]=b 
         b.edges[0]=a
         return Graph([a,b])
         
-    if(len(sortedPoints<4)):
-        a = GraphNode(sortedpoints[0][0],sortedpoints[0][1])
-        b = GraphNode(sortedpoints[1][0],sortedpoints[1][1])
-        c= GraphNode(sortedpoints[2][0],sortedpoints[2][1])
+    if(len(sortedPoints)<4):
+        a = GraphNode(sortedPoints[0][0],sortedPoints[0][1])
+        b = GraphNode(sortedPoints[1][0],sortedPoints[1][1])
+        c= GraphNode(sortedPoints[2][0],sortedPoints[2][1])
                 
         a.edges[0]=b 
         a.edges[1]=c
@@ -67,8 +67,8 @@ def divid(sortedPoints):
         return Graph([a,b,c])
         
 
-    left = sortedPoints[:len(A)/2]
-    right = sortedPoints[len(A)/2:]
+    left = sortedPoints[:int(len(sortedPoints)/2)]
+    right = sortedPoints[int(len(sortedPoints)/2):]
     return merge(divid(left),divid(right))
 
     
