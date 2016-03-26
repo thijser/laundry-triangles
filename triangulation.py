@@ -155,9 +155,9 @@ def deterministic_triangulation(points):
         add_triangle(G, points)
         return G
          
-    p_i = 1
-    q_i = 0;
-    r_i = 2;
+    p_i = len(points) - 1
+    q_i = p_i - 1;
+    r_i = 0;
 
     p = points[p_i]
     q = points[q_i]

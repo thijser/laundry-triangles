@@ -9,7 +9,8 @@ from triangulation import deterministic_triangulation
 from polygons import create_circular_polygon
 from polygons import create_random_structure
 from polygons import create_ellipsular_polygon
-from polygons import create_worst_case
+from polygons import create_worst_cases
+from polygons import create_almost_worst_cases
 
 import time
 
@@ -17,22 +18,25 @@ import time
 sizes = []
 timesW = []
 timesA = []
-multiplier = 80
+multiplier = 20
 n = 21
-repetitions = 10
+repetitions = 50
 
+max_n = 80
 
-sys.setrecursionlimit((n+10) * multiplier)
+sys.setrecursionlimit((max_n+10) * multiplier)
 
-for i in range(1,n):
-    size = i*multiplier
-    
+cases = []
+while len(cases) < max_n - 20:
+    cases = create_worst_cases(80, max_n, 1.0/6000.0, 300)
+
+for i in range(0,len(cases)):    
     temp_timesW = []
     temp_timesA = []
     
+    poly = cases[i]
+    
     for j in range(0,repetitions):
-        poly = create_worst_case(20, size)
-        
         pol = list(poly)
         start_time = time.clock()
         deterministic_triangulation(pol)
@@ -47,7 +51,7 @@ for i in range(1,n):
     
     timesW.append(sum(temp_timesW) / (float(repetitions)))
     timesA.append(sum(temp_timesA) / (float(repetitions)))
-    sizes.append(size)
+    sizes.append(len(poly))
     print(timesA[i-1])
 
 plt.plot(sizes,timesW, 'r')
