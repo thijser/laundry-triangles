@@ -24,10 +24,11 @@ def dinvandconquer (points):
 
      return divid(sorted(points, key=itemgetter(0)))
 
+#is the angle less then 180 degrees from base ?
 def ValidAngle(a,b,c):
     return 0<((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x))
 
-
+#calculate the angle 
 def angle(a,b,c):
 
     xa=a.x-c.x
@@ -46,7 +47,7 @@ def angle(a,b,c):
       return 180
      
     return -gamma%180
-
+#get the next candidate 
 def getCandidate(l,i,a,b):
     c=0
 
@@ -67,7 +68,7 @@ def getCandidate(l,i,a,b):
             ri=i+1
             return c;
     return None
-    
+#merge the two delaundry triangulations     
 def merge(left,right):
     left[len(left)-1].edges.add(right[len(right)-1])
     left[0].edges.add(right[0])
@@ -79,7 +80,7 @@ def merge(left,right):
     ret.append(right.pop())
     i=0
     j=0
-
+    #O(n) sorting if these two are already cyclicy matched
     left=dazesorted(left,key = lambda z,x=a,y=b: angle(x,y,z))
     right=dazesorted(right,key = lambda z,x=b,y=a: angle(x,y,z))
     while(1==1):
@@ -98,6 +99,7 @@ def merge(left,right):
         else:
             cl= None
         tj=ri
+        #we have two competing sides 
         if((cl is not None) and (cr is not None)):
             circlleft=tr.circumcircle([[a.x,a.y],[b.x,b.y],[cl.x,cl.y]])
             if(tr.in_circle(circlleft,[cr.x,cr.y])):
@@ -114,8 +116,9 @@ def merge(left,right):
             left.remove(c)
             ret.append(c)
         if(c is None):
+            #we are done 
             return ret+left+right
-        
+        #connect candidates
         c.edges.add(a)
         c.edges.add(b)
         a.edges.add(c)
@@ -124,6 +127,7 @@ def merge(left,right):
             b=c
         else:
             a=c
+    #cleanup if the system failed (shouldn't happen)
     while(len(left)!=0):
        ret.append(left[0])
        lcl=left[0]
@@ -164,7 +168,7 @@ def mergeLists(left,right):
 
     return res            
         
-
+#divide step, also merges results 
 def divid(sortedPoints):
     
     if(len(sortedPoints)<3):
@@ -189,6 +193,7 @@ def divid(sortedPoints):
         if(b.y>c.y):
            b,c=c,b
         return [a,b,c]
+    #split into two 
     left = sortedPoints[:int(len(sortedPoints)/2)]
     right = sortedPoints[int(len(sortedPoints)/2):]
  
