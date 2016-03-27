@@ -19,9 +19,9 @@ sizes = []
 times = []
 timesW = []
 timesA = []
-multiplier = 50
-n = 201
-repetitions = 20
+multiplier = 200
+n = 51
+repetitions = 10
 
 max_n = 80
 
@@ -34,7 +34,7 @@ for i in range(1,n):
     for j in range(0,repetitions):
         pol = create_ellipsular_polygon(20,30,size)
         start_time = time.perf_counter()
-        chew_triangulation(pol)
+        deterministic_triangulation(pol)
         end_time = time.perf_counter()
         temp_times.append(end_time - start_time)
         

@@ -3,7 +3,7 @@ import networkx as nx
 import random as rand
 import math
 import triangulation as tr
-
+from math import atan2, degrees, pi
 
 
 
@@ -16,58 +16,129 @@ class GraphNode:
         self.edges=[]
     def __repr__(self):
         st= '{0:.{1}f}'.format((self.x),2),",",'{0:.{1}f}'.format((self.y),2), ",<"
-        for e in self.edges:
-           st+= "(",'{0:.{1}f}'.format((e.x),2),",",'{0:.{1}f}'.format((e.y),2),")"
-        st+=">",
+#        for e in self.edges:
+#           st+= "(",'{0:.{1}f}'.format((e.x),2),",",'{0:.{1}f}'.format((e.y),2),")"
+#        st+=">",
         return ''.join((st))
 
 def dinvandconquer (points):
 
      return divid(sorted(points, key=itemgetter(0)))
+
+def ValidAngle(a,b,c):
+    return 0<((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x))
+
+
+def angle(a,b,c):
+
+    xa=a.x-c.x
+    ya=a.y-c.y
+    xb=b.x-c.x
+    yb=b.y-c.y 
+    la=(xa-xb)*(xa-xb)+(ya-yb)
+    lb=(xb*xb)+(yb*yb)
+    lc=(xa*xa)+(ya*ya)
+
+    if(2*la*lb<0.00000001):
+        return -1
+    print((la+lb -lc)/(2*la*lb))
+   # try:
+    gamma=math.acos((la+lb -lc)/(2*la*lb))
+    #catch:
+    #  return 180
+    # 
+    return -gamma%180
+
+def getCandidate(l,i,a,b):
+    c=0
+
+    while(i<len(l)):
+        global ri
+        ri=i
+        c=l[i]
+        if ((c == a) or (c == b)):
+            i=i+1
+            continue
+        circle=tr.circumcircle([[a.x,a.y],[b.x,b.y],[c.x,c.y]])
+        if(i+1<len(l) and (tr.in_circle(circle,[l[i+1].x,l[i+1].y]))):
+            i=i+1
+            while(i+1<len(l) and ValidAngle(a,b,c)):
+                 i=i+1
+            continue
+        else:
+            ri=i+1
+            return c;
+    return None
     
 def merge(left,right):
+    left[len(left)-1].edges.add(right[len(right)-1])
     left[0].edges.add(right[0])
+    right[0].edges.add(left[0])
+    a=left[len(left)-1]
+    b=right[len(right)-1]
+    ret = []
+    ret.append(left.pop())
+    ret.append(right.pop())
     i=0
     j=0
-    a=left[0]
-    b=right[0]
-    c=left[0] #candidate 
-    print("left:")
-    for e in left:
-        print(e.y)
-    print("right")
-    for e in right:
-        print(e.y)
 
-    while((i<len(left)-2)&(j<len(right)-2)):
-        circle=tr.circumcircle([[a.x,a.y],[b.x,b.y],[left[i+1].x,left[i+1].x]])
 
-        if (tr.in_circle(circle,[right[i+1].x,right[i+1].y])):
-            c=left[j+1]
-            j=j+1
-            circle2=tr.circumcircle([[a.x,a.y],[b.x,b.y],[c.y,c.x]])
-            
-            if ((len(left)>j+1) and tr.in_circle(circle2,[left[j+1].x,left[j+1].y]) or ((len(right)>i+1) and tr.in_circle(circle2,[right[i+1].x,right[i+1].y]))):
-                     continue
+    while(1==1):
+        left=sorted(left,key = lambda z,x=a,y=b: angle(x,y,z))
+        right=sorted(right,key = lambda z,x=b,y=a: angle(x,y,z))
+        c = None
+        if(len(left)>i):
+             cl=getCandidate(left,i,a,b)
+        if(cl is not None):
+           lcl=cl
+        ti=ri
+        if(len(right)>j):
+            cr=getCandidate(right,j,b,a)
         else:
-            c=right[i+1]  
-            circle2=tr.circumcircle([[a.x,a.y],[b.x,b.y],[c.y,c.x]])
-            i=i+1
-            if ((len(left)>j+1) and tr.in_circle(circle2,[left[j+1].x,left[j+1].y]) or ((len(right)>i+1) and tr.in_circle(circle2,[right[i+1].x,right[i+1].y]))):
-                continue
-
-        c.edges.add(b)
+            cr= None
+        if(cr is not None):
+           lcr=cr
+        else:
+            cl= None
+        tj=ri
+        if((cl is not None) and (cr is not None)):
+            circlleft=tr.circumcircle([[a.x,a.y],[b.x,b.y],[cl.x,cl.y]])
+            if(tr.in_circle(circlleft,[cr.x,cr.y])):
+                cl=None
+        if cr is not None:
+            c=cr
+            j=1
+            right.remove(c)
+            ret.append(c)
+            cl = None
+        if(cl is not None):
+            c=cl
+            i=1
+            left.remove(c)
+            ret.append(c)
+        if(c is None):
+            return ret+left+right
+        
         c.edges.add(a)
-        b.edges.add(c)
+        c.edges.add(b)
         a.edges.add(c)
-        a=c
-        j=j+1
-            
-    left[len(left)-1].edges.add(right[len(right)-1])
-    right[len(right)-1].edges.add(left[len(left)-1])
-    return mergeLists(left,right)
-   
-    
+        b.edges.add(c)
+        if(cl is not None):
+            b=c
+        else:
+            a=c
+    while(len(left)!=0):
+       ret.append(left[0])
+       lcl=left[0]
+       c.edges.add(left.pop())
+    while(len(right)!=0):
+       lcr=right[0]
+       ret.append(right[0])
+       c.edges.add(right.pop())
+    lcr.edges.add(lcl)
+    lcl.edges.add(lcr)
+    return ret
+
 def mergeLists(left,right):
     if(left is None):
         return right
@@ -87,9 +158,11 @@ def mergeLists(left,right):
 
     while(i<len(right)):
         res.append(right[i])
+        cr=right[i]
         i=i+1
     while(j<len(left)):
         res.append(left[j])
+        cr=left[i]
         j=j+1
 
     return res            
@@ -102,11 +175,8 @@ def divid(sortedPoints):
         b = GraphNode(sortedPoints[1][0],sortedPoints[1][1])
         a.edges={b} 
         b.edges={a}
-        print("ja")
         if(a.y>b.y):
-            print(b.x,",",b.y,"-",a.x,",",a.y)
             return [b,a]
-        print(a.x,",",a.y,"-",b.x,",",b.y)
         return[a,b]
     if(len(sortedPoints)<4):
         a = GraphNode(sortedPoints[0][0],sortedPoints[0][1])
