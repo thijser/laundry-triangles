@@ -82,7 +82,7 @@ def find_S(graph, p, q, r):
         
         #Find all triangles which contain point (and have not been checked yet) whichs circumcircle contains p
         neighbors = [n for n in graph[point] if n not in checked]        
-        triangles = [(point, neighbors[n1], neighbors[n2]) for n1 in range(0,len(neighbors)) for n2 in range(n1+1,len(neighbors)) if graph.has_edge(neighbors[n1], neighbors[n2])]        
+        triangles = [(point, neighbors[n1], neighbors[n2]) for n1 in range(0,len(neighbors)) for n2 in range(n1+1,len(neighbors)) if graph.has_edge(neighbors[n1], neighbors[n2])]
         invalid = [triangle for triangle in triangles if in_circle(circumcircle(triangle), p)]
         
         S.extend(invalid)
