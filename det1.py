@@ -16,9 +16,9 @@ class GraphNode:
         self.edges=[]
     def __repr__(self):
         st= '{0:.{1}f}'.format((self.x),2),",",'{0:.{1}f}'.format((self.y),2), ",<"
-#        for e in self.edges:
-#           st+= "(",'{0:.{1}f}'.format((e.x),2),",",'{0:.{1}f}'.format((e.y),2),")"
-#        st+=">",
+        for e in self.edges:
+           st+= "(",'{0:.{1}f}'.format((e.x),2),",",'{0:.{1}f}'.format((e.y),2),")"
+        st+=">",
         return ''.join((st))
 
 def dinvandconquer (points):
@@ -41,12 +41,11 @@ def angle(a,b,c):
 
     if(2*la*lb<0.00000001):
         return -1
-    print((la+lb -lc)/(2*la*lb))
-   # try:
-    gamma=math.acos((la+lb -lc)/(2*la*lb))
-    #catch:
-    #  return 180
-    # 
+    try:
+        gamma=math.acos((la+lb -lc)/(2*la*lb))
+    except:
+      return 180
+     
     return -gamma%180
 
 def getCandidate(l,i,a,b):
@@ -82,10 +81,9 @@ def merge(left,right):
     i=0
     j=0
 
-
+    left=sorted(left,key = lambda z,x=a,y=b: angle(x,y,z))
+    right=sorted(right,key = lambda z,x=b,y=a: angle(x,y,z))
     while(1==1):
-        left=sorted(left,key = lambda z,x=a,y=b: angle(x,y,z))
-        right=sorted(right,key = lambda z,x=b,y=a: angle(x,y,z))
         c = None
         if(len(left)>i):
              cl=getCandidate(left,i,a,b)
