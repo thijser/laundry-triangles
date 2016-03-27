@@ -6,6 +6,8 @@ from triangulation import chew_triangulation
 from triangulation import draw
 from triangulation import deterministic_triangulation
 
+from det1 import dinvandconquer
+
 from polygons import create_circular_polygon
 from polygons import create_random_structure
 from polygons import create_ellipsular_polygon
@@ -16,12 +18,12 @@ import time
 
 
 sizes = []
-times = []
-timesW = []
-timesA = []
-multiplier = 50
-n = 201
-repetitions = 20
+timesC = []
+timesDC = []
+timesD = []
+multiplier = 200
+n = 51
+repetitions = 10
 
 max_n = 80
 
@@ -29,22 +31,45 @@ sys.setrecursionlimit((n+10) * multiplier)
 
 for i in range(1,n):
     size = i * multiplier
-    temp_times = []
+    temp_timesC = []
+    temp_timesDC = []
+    temp_timesD = []
     
     for j in range(0,repetitions):
-        pol = create_ellipsular_polygon(20,30,size)
+        poly = create_ellipsular_polygon(20,30,size)
+        
+        pol = list(poly)
         start_time = time.perf_counter()
         chew_triangulation(pol)
         end_time = time.perf_counter()
-        temp_times.append(end_time - start_time)
+        temp_timesC.append(end_time - start_time)
+        
+        pol = list(poly)
+        start_time = time.perf_counter()
+        deterministic_triangulation(pol)
+        end_time = time.perf_counter()
+        temp_timesDC.append(end_time - start_time)
+        
+        pol = list(poly)
+        start_time = time.perf_counter()
+        deterministic_triangulation(pol)
+        end_time = time.perf_counter()
+        temp_timesD.append(end_time - start_time)
         
     sizes.append(size)
-    times.append(sum(temp_times) / float(repetitions))
-    print(times[i-1])
+    timesC.append(sum(temp_timesC) / float(repetitions))
+    timesDC.append(sum(temp_timesDC) / float(repetitions))
+    timesD.append(sum(temp_timesD) / float(repetitions))
+    print(timesC[i-1])
     
-plt.plot(sizes,times, 'b')
+plt.plot(sizes,timesC, 'b', label = "Chew's algorithm")
+plt.plot(sizes, timesDC, 'r', label = "Derandomized Chew's algorithm")
+plt.plot(sizes, timesD, 'k', label = "Divide and conquer")
+
 plt.xlabel("Number of points")
 plt.ylabel("Runtime (in seconds)")
+
+plt.legend(loc=2)
 
 plt.show()
 
