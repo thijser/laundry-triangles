@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 from decimal import *
 
+#All points in this module should be given as (Decimal, Decimal)
+
 def add_triangle(graph, triangle):
     for i in range(0,3):
         graph.add_node(triangle[i])

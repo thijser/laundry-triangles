@@ -1,6 +1,5 @@
 from operator import itemgetter
 import networkx as nx
-import random as rand
 import math
 import triangulation as tr
 from math import atan2, degrees, pi
