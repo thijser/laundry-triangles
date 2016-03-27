@@ -25,19 +25,23 @@ multiplier = 200
 n = 51
 repetitions = 10
 
-max_n = 80
+max_n = 60
 
 sys.setrecursionlimit((n+10) * multiplier)
 
-for i in range(1,n):
+cases = []
+while len(cases) < max_n-3:
+    cases = create_worst_cases(40, 80, max_n, 1.0/2000.0, 300)
+
+for i in range(0,len(cases)):
     size = i * multiplier
     temp_timesC = []
     temp_timesDC = []
     temp_timesD = []
     
-    for j in range(0,repetitions):
-        poly = create_ellipsular_polygon(20,30,size)
-        
+    poly = cases[i]
+    
+    for j in range(0,repetitions):        
         pol = list(poly)
         start_time = time.perf_counter()
         chew_triangulation(pol)
@@ -52,11 +56,11 @@ for i in range(1,n):
         
         pol = list(poly)
         start_time = time.perf_counter()
-        deterministic_triangulation(pol)
+        #dinvandconquer(pol)
         end_time = time.perf_counter()
         temp_timesD.append(end_time - start_time)
         
-    sizes.append(size)
+    sizes.append(i+3)
     timesC.append(sum(temp_timesC) / float(repetitions))
     timesDC.append(sum(temp_timesDC) / float(repetitions))
     timesD.append(sum(temp_timesD) / float(repetitions))
@@ -71,38 +75,4 @@ plt.ylabel("Runtime (in seconds)")
 
 plt.legend(loc=2)
 
-plt.show()
-
-quit()
-
-cases = []
-while len(cases) < max_n - 20:
-    cases = create_worst_cases(80, max_n, 1.0/6000.0, 300)
-
-for i in range(0,len(cases)):    
-    temp_timesW = []
-    temp_timesA = []
-    
-    poly = cases[i]
-    
-    for j in range(0,repetitions):
-        pol = list(poly)
-        start_time = time.perf_counter()
-        deterministic_triangulation(pol)
-        end_time = time.perf_counter()
-        temp_timesW.append(end_time - start_time)
-        
-        pol = list(poly)
-        start_time = time.perf_counter()
-        chew_triangulation(pol)
-        end_time = time.perf_counter()
-        temp_timesA.append(end_time - start_time)
-    
-    timesW.append(sum(temp_timesW) / (float(repetitions)))
-    timesA.append(sum(temp_timesA) / (float(repetitions)))
-    sizes.append(len(poly))
-    print(timesA[i-1])
-
-plt.plot(sizes,timesW, 'r')
-plt.plot(sizes,timesA, 'b')
 plt.show()

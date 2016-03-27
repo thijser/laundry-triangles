@@ -39,6 +39,8 @@ def create_worst_cases(a, b, num_points, epsilon, start_area):
     cases.append(list(points))
     
     for i in range(0, num_points - 3):
+        print("Currently adding points " + str(i+3))
+        
         p = ps[len(ps)-1] + epsilon
         
         if p >= 1:
