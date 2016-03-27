@@ -3,7 +3,7 @@ import networkx as nx
 import math
 import triangulation as tr
 from math import atan2, degrees, pi
-
+import dazesort 
 
 
         
@@ -80,8 +80,8 @@ def merge(left,right):
     i=0
     j=0
 
-    left=sorted(left,key = lambda z,x=a,y=b: angle(x,y,z))
-    right=sorted(right,key = lambda z,x=b,y=a: angle(x,y,z))
+    left=dazesorted(left,key = lambda z,x=a,y=b: angle(x,y,z))
+    right=dazesorted(right,key = lambda z,x=b,y=a: angle(x,y,z))
     while(1==1):
         c = None
         if(len(left)>i):
