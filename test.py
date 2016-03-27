@@ -16,15 +16,39 @@ import time
 
 
 sizes = []
+times = []
 timesW = []
 timesA = []
-multiplier = 20
-n = 21
-repetitions = 50
+multiplier = 50
+n = 201
+repetitions = 20
 
 max_n = 80
 
-sys.setrecursionlimit((max_n+10) * multiplier)
+sys.setrecursionlimit((n+10) * multiplier)
+
+for i in range(1,n):
+    size = i * multiplier
+    temp_times = []
+    
+    for j in range(0,repetitions):
+        pol = create_ellipsular_polygon(20,30,size)
+        start_time = time.perf_counter()
+        chew_triangulation(pol)
+        end_time = time.perf_counter()
+        temp_times.append(end_time - start_time)
+        
+    sizes.append(size)
+    times.append(sum(temp_times) / float(repetitions))
+    print(times[i-1])
+    
+plt.plot(sizes,times, 'b')
+plt.xlabel("Number of points")
+plt.ylabel("Runtime (in seconds)")
+
+plt.show()
+
+quit()
 
 cases = []
 while len(cases) < max_n - 20:
@@ -38,15 +62,15 @@ for i in range(0,len(cases)):
     
     for j in range(0,repetitions):
         pol = list(poly)
-        start_time = time.clock()
+        start_time = time.perf_counter()
         deterministic_triangulation(pol)
-        end_time = time.clock()
+        end_time = time.perf_counter()
         temp_timesW.append(end_time - start_time)
         
         pol = list(poly)
-        start_time = time.clock()
+        start_time = time.perf_counter()
         chew_triangulation(pol)
-        end_time = time.clock()
+        end_time = time.perf_counter()
         temp_timesA.append(end_time - start_time)
     
     timesW.append(sum(temp_timesW) / (float(repetitions)))
