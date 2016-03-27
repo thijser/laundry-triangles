@@ -26,8 +26,8 @@ def create_random_structure(num_points):
     mult = 50;
     return [(Decimal(rand.random()*50), Decimal(rand.random()*50)) for i in range(0,num_points)]
     
-def create_worst_cases(radius, num_points, epsilon, start_area):
-    func = lambda p : (Decimal(radius*math.cos(p*2*math.pi)), Decimal(radius*math.sin(p*2*math.pi)))
+def create_worst_cases(a, b, num_points, epsilon, start_area):
+    func = lambda p : (Decimal(a*math.cos(p*2*math.pi)), Decimal(b*math.sin(p*2*math.pi)))
     
     cases = []
     
@@ -42,7 +42,7 @@ def create_worst_cases(radius, num_points, epsilon, start_area):
         p = ps[len(ps)-1] + epsilon
         
         if p >= 1:
-            print("Only got to " + str(len(points)) + " points :-(")
+            print("Only got to " + str(len(points)) + " points")
             return cases
         
         q = points[len(points)-1]
@@ -72,8 +72,8 @@ def create_worst_cases(radius, num_points, epsilon, start_area):
     return cases
     
    
-def create_almost_worst_cases(radius, num_points, epsilon):
-    func = lambda p : (Decimal(radius*math.cos(p*2*math.pi)), Decimal(radius*math.sin(p*2*math.pi)))
+def create_almost_worst_cases(a, b, num_points, epsilon):
+    func = lambda p : (Decimal(a*math.cos(p*2*math.pi)), Decimal(b*math.sin(p*2*math.pi)))
     
     cases = []
     
@@ -90,7 +90,7 @@ def create_almost_worst_cases(radius, num_points, epsilon):
         p = ps[len(ps)-1] + epsilon
         
         if p >= 1:
-            print("Only got to " + str(len(points)) + " points :-(")
+            print("Only got to " + str(len(points)) + " points")
             return cases
         
         q = points[len(points)-1]
