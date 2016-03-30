@@ -166,7 +166,7 @@ def deterministic_triangulation(points):
     r = points[r_i]
 
     points.pop(p_i)
-    G = chew_triangulation(points)
+    G = deterministic_triangulation(points)
     
     S = find_S(G, p, q, r)
     
